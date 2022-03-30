@@ -1,15 +1,14 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "springpet.fullname" . }}
-  labels:
-    {{- include "springpet.labels" . | nindent 4 }}
+  name: {{. Chart.Name }}-service
 spec:
-  type: {{ .Values.service.type }}
-  ports:
-    - port: {{ .Values.service.port }}
-      targetPort: http
-      protocol: TCP
-      name: http
   selector:
-    {{- include "springpet.selectorLabels" . | nindent 4 }}
+    app: {{. Chart.Name }}
+  ports:
+      {{- with .Values.service }}
+    - name: {{ .name }}
+      port: {{ .port }}
+      targetPort: {{ .targetPort }}
+      {{- end }}
+  type: {{ .Values.service.type }}

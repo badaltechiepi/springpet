@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: nginx
+  repository: badalbks/springpetclinic:latest
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
@@ -37,8 +37,15 @@ securityContext: {}
   # runAsUser: 1000
 
 service:
-  type: ClusterIP
+  name: spring-petclinic-ports
+  type: LoadBalancer
   port: 80
+  targetPort: 8080
+container:
+   ports:
+     protocol: TCP
+     containerPort: 8080
+      
 
 ingress:
   enabled: false
@@ -56,17 +63,17 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
-resources: {}
+resources: 
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
+   limits:
+     cpu: 500m
+     memory: 500Mi
+   requests:
+     cpu: 250m
+     memory: 250Mi
 
 autoscaling:
   enabled: false
